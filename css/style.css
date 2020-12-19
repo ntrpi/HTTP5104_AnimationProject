@@ -1,0 +1,176 @@
+html {
+    box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+
+body {
+    margin: 1em;
+    font-family: Arial, Helvetica, sans-serif;
+
+    --wall: 1px solid black;
+}
+
+header {
+    text-align: center;
+}
+
+main {
+    text-align: center;
+}
+
+.hidden {
+    position: absolute;
+    left: -10000px;
+}
+
+.pageWrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+    position: relative;
+}
+
+#mainDiv {
+    display: flex;
+    flex-direction: row;
+}
+
+.mazeDiv {
+    width: 100%;
+    margin: 25px;
+    margin-top: 50px;
+}
+
+#restart {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 25px;
+}
+
+#maze {
+    border-spacing: 0;
+}
+
+.cellStyle {
+    height: 50px;
+    width: 50px;
+}
+
+.wallRight {
+    border-right: var(--wall);
+}
+
+.wallLeft {
+    border-left: var(--wall);
+}
+
+.wallTop {
+    border-top: var(--wall);
+}
+
+.wallBottom {
+    border-bottom: var(--wall);
+}
+
+.mouse {
+    position: absolute;
+}
+
+.cheese {
+    position: absolute;
+}
+
+#movesDiv {
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+}
+
+.arrowBtn {
+    /* Center the content */
+    align-items: center;
+    display: flex;
+    justify-content: center;
+
+    /* Spacing */
+    padding: 5px;
+    margin: 5px;
+
+    /* Transparent background */
+    background-color: transparent;
+
+    /* Edges */
+    border-top: 3px solid black;
+    border-right: 3px solid black;
+    border-bottom: transparent;
+    border-left: transparent;
+
+    /* Size */
+    height: 20px;
+    width: 20px;
+}
+
+.top {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.bottom {
+    margin-top: -12px;
+    padding-top: 0;
+}
+
+.left2 {
+    margin-right: 0;
+    padding-right: 0;
+}
+
+.right2 {
+    margin-left: -12px;
+    padding-left: 0;
+}
+
+.arrowBtn:focus {
+    outline: transparent;
+}
+
+.leftRightBtns {
+    display: flex;
+    flex-direction: row;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.btnsCenter {
+    width: 20px;
+    padding: 10px;
+}
+
+.up {
+    transform: rotate(-45deg);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.left {
+    transform: rotate(-135deg);
+}
+
+.right {
+    transform: rotate(45deg);
+}
+
+.down {
+    transform: rotate(135deg);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.center {
+    border-color: transparent;
+}
+
