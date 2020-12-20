@@ -1,4 +1,7 @@
-// Maze generator: https://codepen.io/sebastianomorando/pen/bJwVWG
+/********************************** Borrowed code ********************************/
+// I got most of the code to generate the maze from here:
+// https://codepen.io/sebastianomorando/pen/bJwVWG
+// I understand all of it and could write it myself with enough time.
 
 var numberOfCells = 0;
 var visitedCells = 0;
@@ -154,6 +157,7 @@ function generateMaze( startingCell )
     }
 }
 
+/********************************** End of borrowed maze code ************************************/
 
 function renderTable( cellMatrix, parent )
 {
@@ -201,8 +205,11 @@ function isCheese( i, j )
 function removeCheese( i, j )
 {
     cheeseMatrix[j][i].style.display = "none";
-    cheeseMatrix[J][i] = null;
+    cheeseMatrix[j][i] = null;
     totalCheeses--;
+    if( totalCheeses === 0 ) {
+        setMessage( "Good work! Now finish the maze!", "1.2em" );
+    }
 }
 
 function setCheese( element )
@@ -216,8 +223,8 @@ function setCheese( element )
     element.style.transition = `-webkit-transform 1s`;
     var cheeseX = -( getOffsetLeft( element ) ) + mazeOffsetLeft + 10;
     var cheeseY = -( getOffsetTop( element ) ) + mazeOffsetTop + 10;
-    cheeseX += cheeseI * 50;
-    cheeseY += cheeseJ * 50
+    cheeseX += cheeseI * unit;
+    cheeseY += cheeseJ * unit
     element.style.transform = `translate( ${ cheeseX }px, ${ cheeseY }px )`;
 }
 
@@ -252,82 +259,19 @@ var currentY = 0;
 var currentDegrees = 0;
 var currentDirection = 0;
 
-function getDegrees( newDirection )
+function getDegrees( direction )
 {
-    var diff = currentDirection - newDirection;
-    if( diff % 2 === 0 ) {
+    if( currentDirection < 0 ) {
+        currentDirection = 4 + currentDirection;
+    }
+    var diff = currentDirection - direction;
+    if( diff === 0 || diff === 2 ) { // Could use % here but this is more efficient.
         return diff * 90;
     }
-    if( Math.abs( diff ) === 1 ) {
+    if( diff === 1 || diff === -1 ) { // Could use Math.abs here but this is more efficient.
         return diff * -90;
     }
     return ( diff % 2 ) * 90;
-}
-
-function getI( direction ) 
-{
-    if( direction === upDir ) {
-        return currentI - 1;
-    }
-    if( direction === downDir ) {
-        return currentI + 1;
-    }
-    return currentI;
-}
-
-function getJ( direction ) 
-{
-    if( direction === rightDir ) {
-        return currentJ + 1;
-    }
-    if( direction === leftDir ) {
-        return currentJ - 1;
-    }
-    return currentJ;
-}
-
-function transUp( isScale )
-{
-    currentI--;
-    transMouse( 0, -50, getDegrees( 0 ), 1, isScale );
-}
-
-function transDown( isScale )
-{
-    currentI++;
-    transMouse( 0, 50, getDegrees( 2 ), 1, isScale );
-}
-
-function transLeft( isScale )
-{
-    currentJ--;
-    transMouse( -50, 0, getDegrees( 3 ), 1, isScale );
-}
-
-function transRight( isScale )
-{
-    currentJ++;
-    transMouse( 50, 0, getDegrees( 1 ), 1, isScale );
-}
-
-function rotateMouse( degrees, secs )
-{
-    transMouse( 0, 0, degrees, secs );
-}
-
-function transMouse( x, y, degrees, secs, isScale ) 
-{
-    currentX += x;
-    currentY += y;
-    currentDegrees += degrees;
-    currentDegrees %= 360;
-    currentDirection = currentDegrees / 90;
-    mouse.style.transition = `-webkit-transform ${ secs }s`;
-    if( isScale ) {
-        mouse.style.transform = `translate( ${ currentX }px, ${ currentY }px ) rotate( ${ currentDegrees }deg ), scale( 5, 5 )`;
-    } else {
-        mouse.style.transform = `translate( ${ currentX }px, ${ currentY }px ) rotate( ${ currentDegrees }deg )`;
-    }
 }
 
 function getDirection( i, j )
@@ -339,6 +283,68 @@ function getDirection( i, j )
     } else {
         return 1 - diffI;
     }
+}
+
+function getIJ( direction ) 
+{
+    var ij = new Array(2);
+    ij[0] = direction === 0 || direction === 2 ? currentI + direction - 1 : currentI;
+    ij[1] = direction === 1 || direction === 3 ? currentJ - direction + 2 : currentJ;
+    return ij;
+}
+
+const transLength = 0.75;
+
+function transUp()
+{
+    currentI--;
+    transMouse( 0, -unit, getDegrees( 0 ), transLength );
+}
+
+function transDown()
+{
+    currentI++;
+    transMouse( 0, unit, getDegrees( 2 ), transLength );
+}
+
+function transLeft()
+{
+    currentJ--;
+    transMouse( -unit, 0, getDegrees( 3 ), transLength );
+}
+
+function transRight()
+{
+    currentJ++;
+    transMouse( unit, 0, getDegrees( 1 ), transLength );
+}
+
+function rotateMouse( direction, secs )
+{
+    transMouse( 0, 0, getDegrees( direction ), secs );
+}
+
+function rotateMouseDegrees( degrees, secs )
+{
+    transMouse( 0, 0, degrees, secs );
+}
+
+function transMouse( x, y, degrees, secs ) 
+{
+    currentX += x;
+    currentY += y;
+    currentDegrees += degrees;
+    currentDegrees %= 360;
+    currentDirection = currentDegrees / 90;
+    mouse.style.transition = `-webkit-transform ${ secs }s`;
+    mouse.style.transform = `translate( ${ currentX }px, ${ currentY }px ) rotate( ${ currentDegrees }deg )`;
+}
+
+function resetRotation()
+{
+    mouse.style.transform = `translate( ${ currentX }px, ${ currentY }px )`;
+    currentDirection = 0;
+    currentDegrees = 0;
 }
 
 function validateMove( direction )
@@ -367,11 +373,11 @@ function sleep( ms )
 
 function wiggleMouse()
 {
-    rotateMouse(  10, .1 );
-    sleep(150).then(() => { rotateMouse( -20, .1 ) });
-    sleep(200).then(() => { rotateMouse( 20, .1 ) });
-    sleep(250).then(() => { rotateMouse( -20, .1 ) });
-    sleep(300).then(() => { rotateMouse(  10,  .2 ) });
+    rotateMouseDegrees(  10, .1 );
+    sleep(150).then(() => { rotateMouseDegrees( -20, .1 ) });
+    sleep(200).then(() => { rotateMouseDegrees( 20, .1 ) });
+    sleep(250).then(() => { rotateMouseDegrees( -20, .1 ) });
+    sleep(300).then(() => { rotateMouseDegrees(  10,  .2 ) });
 }
 
 function bounceMouse( direction )
@@ -401,69 +407,118 @@ function bounceMouse( direction )
 }
 
 var messageDiv;
+var backgroundColour = "#251d29";
+var orange = "rgb(253, 176, 87)";
+
 var restart;
+
+function setMessage( msg, size )
+{
+    messageDiv.innerHTML = msg;
+    messageDiv.style.color = orange;
+    messageDiv.style.fontSize = size;
+}
+
+function removeMessage()
+{
+    messageDiv.style.color = backgroundColour;
+}
 
 function doWin()
 {
-    messageDiv.innerHTML = "You win!"
+    setMessage( "You win!", "2.5em" );
+    var cells = document.getElementsByClassName( "cellStyle" );
+    for( var i = 0; i < cells.length; i++ ) {
+        cells[i].style.border = "none";
+    }
+    var pLength = 1000;
+    for( var i = 0; i < 5; i++ ) {
+        sleep(pLength).then(() => { doMove( 0 ) });
+        pLength += 200;
+        sleep(pLength).then(() => { doMove( 3 ) });
+        pLength += 200;
+    }
+    for( var i = 0; i < 40; i++ ) {
+        sleep(pLength).then(() => { doMove( Math.floor( Math.random() * 4 ) ) });
+        pLength += 200;
+    }
 }
 
 function doLose()
 {
-    messageDiv.innerHTML = "You lose!"
+    setMessage( "You didn't get all the cheese!", "1.5em" );
+    var pLength = 1000;
+    sleep(pLength).then(() => { doMove( 2 ) });
+    pLength += 300;
+    for( var i = 0; i < 20; i++ ) {
+        sleep(pLength).then(() => { doMove( 3 ) });
+        pLength += 300;
+    }
 }
 
-function doMove( direction, isCheeseDir )
+function doMove( direction )
 {
     switch( direction ) {
-        case 0: transUp( isCheeseDir ); break;
-        case 1: transRight( isCheeseDir ); break;
-        case 2: transDown( isCheeseDir ); break;
-        case 3: transLeft( isCheeseDir ); break;
+        case 0: transUp(); break;
+        case 1: transRight(); break;
+        case 2: transDown(); break;
+        case 3: transLeft(); break;
     }
 }
 
 var pauseLength = 0;
+var maxPauseLength = 0;
 
 function moveMouse( direction, isRecurse )
 {
-    pauseLength += 100;
-    var isValidMove = validateMove( direction );
-    if( isValidMove ) {
-        var nextI = getI( direction);
-        var nextJ = getJ( direction );
-        if( nextI === numRows || nextJ === numColumns ) {
+    pauseLength += 75;
+    maxPauseLength = maxPauseLength < pauseLength ? pauseLength : maxPauseLength;
+    if( validateMove( direction ) ) {
+        var nextIJ = getIJ( direction);
+
+        // Exiting the maze.
+        if( nextIJ[0] === numRows || nextIJ[1] === numColumns ) {
+            doMove( direction );
             if( totalCheeses === 0 ) {
                 doWin();
             } else {
                 doLose();
             }
-            doMove( direction, false );
             return;
         }
-        var isCheeseDir = isCheese( nextI, nextJ );
-        doMove( direction, isCheeseDir );
-        if( isCheeseDir ) {
-            sleep(100).then(() => { removeCheese( nextI, nextJ ) });
-            wiggleMouse()
+
+        // Still in the maze.
+        doMove( direction );
+
+        // If we come to a cheese remove it and wiggle the mouse.
+        if( isCheese( nextIJ[0], nextIJ[1] ) ) {
+            sleep( 100 ).then(() => { removeCheese( nextIJ[0], nextIJ[1] ) });
+            wiggleMouse();
         }
+
+        // If we're recursing, wait for the last animation to finish and go again.
         if( isRecurse ) {
-            sleep(pauseLength).then(() => { moveMouse( direction, isRecurse ) }); 
+            sleep( pauseLength ).then(() => { moveMouse( direction, isRecurse ) }); 
         }
-        return;
+
+        // Correct rotation if necessary.
+        var currentDir = Math.floor( ( currentDegrees < 0 ? 360 + currentDegrees : currentDegrees ) / 90 );
+        if( direction > currentDir + 1 || direction < currentDir - 1 ) {
+            resetRotation();
+            rotateMouse( direction );
+        }
 
     } else {
-        rotateMouse( getDegrees( direction), 1 );
+
+        // We're gonna hit a wall.
+        rotateMouse( direction, 1 );
         bounceMouse( direction );
         wiggleMouse();
+
+        // Stop the recursion.
         pauseLength = 0;
         isRecurse = false;
     }
-}
-
-function log( s )
-{
-    console.log( s );
 }
 
 function getOffsetLeft( element )
@@ -480,10 +535,12 @@ function getOffsetTop( element )
     return rect.top + scrollTop
 }
 
-function setArrowOnclick( elements, direction, isRecursive )
+function setArrowOnclick( elements, direction )
 {
     for( var i = 0; i < elements.length; i++ ) {
-        elements[i].onclick = function() {
+        var element = elements[i];
+        let isRecursive = element.classList.contains( "recurse" );
+        element.onclick = function() {
             let dir = direction;
             let isRec = isRecursive;
             moveMouse( dir, isRec );
@@ -507,15 +564,39 @@ function makeMaze()
     initCheese();
 }
 
+function checkKey(e) 
+{    
+    e = e || window.event;
+    if (e.keyCode == '38') {
+        // up arrow
+        moveMouse( 0 );
+    }
+    else if (e.keyCode == '40') {
+        // down arrow
+        moveMouse( 2 );
+    }
+    else if (e.keyCode == '37') {
+       // left arrow
+        moveMouse( 3 );
+    }
+    else if (e.keyCode == '39') {
+       // right arrow
+        moveMouse( 1 );
+    }
+};
+
+var mouse;
+
 window.onload = function() 
 {
-    var mouse = document.getElementById( "mouse" );
+    mouse = document.getElementById( "mouse" );
     var maze = document.getElementById( "maze" );
     mazeOffsetLeft = getOffsetLeft( maze );
     mazeOffsetTop = getOffsetTop( maze );
     makeMaze();
 
     messageDiv = document.getElementById( "message" );
+    messageDiv.style.color = backgroundColour;
 
     restart = document.getElementById( "restart" );
     restart.onclick = function()
@@ -523,31 +604,37 @@ window.onload = function()
         location.reload();
     };
 
-    var spinBtn = document.getElementById( "spin" );
-    spinBtn.onclick = function()
-    {
-        wiggleMouse();
-    };
-
     var upBtns = document.getElementsByClassName( "upBtn" );
-    setArrowOnclick( upBtns, 0, false );
-    upBtns = document.getElementsByClassName( "upBtn2" );
-    setArrowOnclick( upBtns, 0, true );
+    setArrowOnclick( upBtns, 0 );
 
     var rightBtns = document.getElementsByClassName( "rightBtn" );
-    setArrowOnclick( rightBtns, 1, false );
-    rightBtns = document.getElementsByClassName( "rightBtn2" );
-    setArrowOnclick( rightBtns, 1, true );
+    setArrowOnclick( rightBtns, 1 );
 
     var downBtns = document.getElementsByClassName( "downBtn" );
-    setArrowOnclick( downBtns, 2, false );
-    downBtns = document.getElementsByClassName( "downBtn2" );
-    setArrowOnclick( downBtns, 2, true );
+    setArrowOnclick( downBtns, 2 );
 
     var leftBtns = document.getElementsByClassName( "leftBtn" );
-    setArrowOnclick( leftBtns, 3, false );
-    leftBtns = document.getElementsByClassName( "leftBtn2" );
-    setArrowOnclick( leftBtns, 3, true );
+    setArrowOnclick( leftBtns, 3 );
 
+    // Borrowed from https://stackoverflow.com/questions/5597060/detecting-arrow-key-presses-in-javascript.
+    document.onkeyup = checkKey;
+    // var btn = document.getElementById( "utiltity" );
+    // btn.onclick = function() {
+    //     var pLength = 0;
+    //     for( var i = 0; i < numRows; i++ ) {
+    //         sleep(pLength).then(() => { 
+    //             doMove( 1 ); 
+    //         });
+    //         pLength += 100;
+    //         sleep(pLength).then(() => { doMove( 2 ) });
+    //         pLength += 100;
+    //     }
+    
+    //     sleep(pLength).then(() => { doLose() });
+    // };
 };
+
+window.addEventListener( "resize", function() {
+    location.reload();
+} );
 

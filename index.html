@@ -8,6 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="./css/style.css">
     <script src="./js/script.js" async defer></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Ranchers&display=swap" rel="stylesheet">
   </head>
   <body>
     <header class="pageWrapper">
@@ -18,46 +20,49 @@
     <main id="main" class="pageWrapper">
       <div id="mainDiv">
         <div id="mazeDiv" class="mazeDiv">
-          <img id="cheese1" class="cheese" src="./images/cheese.png" alt="cheese clip art." height="30px">
-          <img id="cheese2" class="cheese" src="./images/cheese.png" alt="cheese clip art." height="30px">
-          <img id="cheese3" class="cheese" src="./images/cheese.png" alt="cheese clip art." height="30px">
+          <img id="cheese1" class="cheese" src="./images/cheese.gif" alt="cheese clip art." height="30px">
+          <img id="cheese2" class="cheese" src="./images/cheese.gif" alt="cheese clip art." height="30px">
+          <img id="cheese3" class="cheese" src="./images/cheese.gif" alt="cheese clip art." height="30px">
           <img id="mouse" class="mouse" src="./images/mouse.png" alt="Mouse clip art." height="38px">
           <div>
             <table id="maze"></table>
           </div>
         </div>
-        <div id="movesDiv">
-          <button id="spin">Spin</button>
-          <div class="upDownBtns">
-            <button class="arrowBtn top up upBtn2"></button>
-            <button class="arrowBtn bottom up upBtn2"></button>
-            <button class="arrowBtn up upBtn"></button>
-          </div>
-          <div class="leftRightBtns">
-            <div class="leftRightBtns">
-              <button class="arrowBtn left2 left leftBtn2"></button>
-              <button class="arrowBtn right2 left leftBtn2"></button>
+        <div id="buttonsDiv">
+          <!-- <button id="utiltity">Win</button> -->
+          <div id="movesDiv">
+            <div class="upDownBtns">
+              <button class="recurse upBtn"><div class="arrowBtn up"></div></button>
+              <button class="recurse arrowBtn bottom up upBtn"></button>
+              <button class="upBtn"><div class="arrowBtn up"></div></button>
             </div>
-            <div class="leftRightBtns">
-              <button class="arrowBtn left leftBtn"></button>
-              <button class="arrowBtn center"></button>
-              <button class="arrowBtn right rightBtn"></button>
+            <div class="centerRow">
+              <div class="leftRightBtns">
+                <div class="leftRightBtns">
+                    <button class="recurse leftBtn"><div class="arrowBtn left"></div></button>
+                    <button class="recurse arrowBtn left leftBtn2"></button>
+                <!-- </div>
+                <div class="leftRightBtns"> -->
+                    <button class="leftBtn"><div class="arrowBtn left"></div></button>
+                    <button class="arrowBtn center"></button>
+                    <button class="rightBtn"><div class="arrowBtn right"></div></button>
+                <!-- </div>
+                <div class="leftRightBtns"> -->
+                    <button class="recurse arrowBtn right rightBtn2"></button>
+                    <button class="recurse rightBtn"><div class="arrowBtn right"></div></button>
+                </div>
+              </div>
             </div>
-            <div class="leftRightBtns">
-              <button class="arrowBtn left2 right rightBtn2"></button>
-              <button class="arrowBtn right2 right rightBtn2"></button>
+            <div class="upDownBtns">
+                <button class="downBtn"><div class="arrowBtn down"></div></button>
+                <button class="recurse arrowBtn top down downBtn"></button>
+                <button class="recurse downBtn"><div class="arrowBtn down"></div></button>
             </div>
+            <div class="message" id="message"></div>
           </div>
-          <div class="upDownBtns">
-            <button class="arrowBtn down downBtn"></button>
-            <button class="arrowBtn top down downBtn2"></button>
-            <button class="arrowBtn bottom down downBtn2"></button>
-          </div>
-          <div class="message" id="message"></div>
           <div>
             <input type="button" name="restart" id="restart" value="New Maze">
           </div>
-
         </div>
       </div>
     </main>

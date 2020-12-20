@@ -11,12 +11,26 @@ html {
 body {
     margin: 1em;
     font-family: Arial, Helvetica, sans-serif;
+    background-color: #251d29;
 
-    --wall: 1px solid black;
+    --darkGrey: #433d4c;
+    --mediumGrey: #778299;
+    --lightGrey: #9caebb;
+    --pink: #fbcdcd;
+
+    --wall: 1px solid #778299;
 }
 
 header {
     text-align: center;
+}
+
+h1 {
+    font-family: 'Ranchers', Arial, Helvetica, sans-serif;
+    text-shadow: 2px 2px var( --mediumGrey );
+    color: rgb(253, 176, 87);
+    letter-spacing: 4px;
+    text-transform: uppercase;
 }
 
 main {
@@ -37,18 +51,31 @@ main {
 #mainDiv {
     display: flex;
     flex-direction: row;
+    min-width: 475px;
+}
+
+@media screen and (max-width: 700px) {
+    #mainDiv {
+        flex-direction: column;
+    }
 }
 
 .mazeDiv {
     width: 100%;
     margin: 25px;
-    margin-top: 50px;
 }
 
 #restart {
+    background-color: rgb(253, 176, 87);
+    border-color: transparent;
+    border-radius: 5%;
+    color: var( --darkGrey );
+    font-size: 1.2em;
+    font-family: 'Ranchers', Arial, Helvetica, sans-serif;
     margin-left: auto;
     margin-right: auto;
     margin-top: 25px;
+    padding:.3em 1em;
 }
 
 #maze {
@@ -84,10 +111,16 @@ main {
     position: absolute;
 }
 
+#buttonsDiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
 #movesDiv {
     display: flex;
     flex-direction: column;
-    width: 250px;
+    width: 220px;
 }
 
 .arrowBtn {
@@ -97,15 +130,15 @@ main {
     justify-content: center;
 
     /* Spacing */
-    padding: 5px;
-    margin: 5px;
+    padding: 10px;
+    margin: 0;
 
     /* Transparent background */
     background-color: transparent;
 
     /* Edges */
-    border-top: 3px solid black;
-    border-right: 3px solid black;
+    border-top: 3px solid rgb(253, 176, 87);
+    border-right: 3px solid rgb(253, 176, 87);
     border-bottom: transparent;
     border-left: transparent;
 
@@ -114,29 +147,14 @@ main {
     width: 20px;
 }
 
-.top {
-    margin-bottom: 0;
-    padding-bottom: 0;
+button {
+    border-radius: 10%;
+    background-color: var( --mediumGrey );
+    border-color: transparent;
+    color: var( --darkGrey );
+    outline: none;
 }
 
-.bottom {
-    margin-top: -12px;
-    padding-top: 0;
-}
-
-.left2 {
-    margin-right: 0;
-    padding-right: 0;
-}
-
-.right2 {
-    margin-left: -12px;
-    padding-left: 0;
-}
-
-.arrowBtn:focus {
-    outline: transparent;
-}
 
 .leftRightBtns {
     display: flex;
@@ -172,5 +190,61 @@ main {
 
 .center {
     border-color: transparent;
+    margin: 0 15Px;
 }
 
+.centerRow {
+    margin: 10px 0;
+}
+
+.top {
+    margin-bottom: -19px;
+    padding-bottom: 0;
+}
+
+.bottom {
+    margin-top: -20px;
+    padding-top: 0;
+}
+
+.upBtn {
+    padding-top: 8px;
+    margin-bottom: 2px;
+}
+
+.downBtn {
+    padding-bottom: 8px;
+    margin-top: 2px;
+}
+
+.leftBtn {
+    padding-right: 0px;
+    padding-left: 8px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.leftBtn2 {
+    margin-top: 7px;
+    margin-left: -18px;
+}
+
+.rightBtn {
+    padding-left: 0px;
+    padding-right: 8px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.rightBtn2 {
+    margin-top: 7px;
+    margin-right: -18px;
+}
+
+.message {
+    color: var( --pink );
+    font-size: 2.3em;
+    font-weight: bold;
+    height: 30px;
+    margin: 1em auto;
+}
