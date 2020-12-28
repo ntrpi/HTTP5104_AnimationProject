@@ -214,6 +214,9 @@ function removeCheese( i, j )
 
 function setCheese( element )
 {
+    if( element === undefined ) {
+        return false;
+    }
     var cheeseI = Math.floor( Math.random() * numRows );
     var cheeseJ = Math.floor( Math.random() * numColumns );
     if( isCheese( cheeseI, cheeseJ ) ) {
@@ -226,6 +229,7 @@ function setCheese( element )
     cheeseX += cheeseI * unit;
     cheeseY += cheeseJ * unit
     element.style.transform = `translate( ${ cheeseX }px, ${ cheeseY }px )`;
+    return true;
 }
 
 function initCheese()
@@ -241,7 +245,10 @@ function initCheese()
 
     var cheeses = document.getElementsByClassName( "cheese" );
     for( var i = 0; i < cheeses.length; i++ ) {
-        setCheese( cheeses[i]);
+        var result = setCheese( cheeses[i]);
+        if( !result ) {
+            console.log( "Trying to set cheese again." );
+        }
         totalCheeses++;
     }
 }
@@ -293,7 +300,7 @@ function getIJ( direction )
     return ij;
 }
 
-const transLength = 0.75;
+var transLength = 0.75;
 
 function transUp()
 {
@@ -374,10 +381,10 @@ function sleep( ms )
 function wiggleMouse()
 {
     rotateMouseDegrees(  10, .1 );
-    sleep(150).then(() => { rotateMouseDegrees( -20, .1 ) });
-    sleep(200).then(() => { rotateMouseDegrees( 20, .1 ) });
-    sleep(250).then(() => { rotateMouseDegrees( -20, .1 ) });
-    sleep(300).then(() => { rotateMouseDegrees(  10,  .2 ) });
+    sleep(150).then(() => { rotateMouseDegrees( -20, .05 ) });
+    sleep(200).then(() => { rotateMouseDegrees( 20, .05 ) });
+    sleep(250).then(() => { rotateMouseDegrees( -20, .05 ) });
+    sleep(300).then(() => { rotateMouseDegrees(  10,  .1 ) });
 }
 
 function bounceMouse( direction )
@@ -426,6 +433,7 @@ function removeMessage()
 
 function doWin()
 {
+    transLength = 0.5;
     setMessage( "You win!", "2.5em" );
     var cells = document.getElementsByClassName( "cellStyle" );
     for( var i = 0; i < cells.length; i++ ) {
@@ -434,13 +442,13 @@ function doWin()
     var pLength = 1000;
     for( var i = 0; i < 5; i++ ) {
         sleep(pLength).then(() => { doMove( 0 ) });
-        pLength += 200;
+        pLength += 300;
         sleep(pLength).then(() => { doMove( 3 ) });
-        pLength += 200;
+        pLength += 300;
     }
     for( var i = 0; i < 40; i++ ) {
         sleep(pLength).then(() => { doMove( Math.floor( Math.random() * 4 ) ) });
-        pLength += 200;
+        pLength += 300;
     }
 }
 
@@ -616,22 +624,15 @@ window.onload = function()
     var leftBtns = document.getElementsByClassName( "leftBtn" );
     setArrowOnclick( leftBtns, 3 );
 
-    // Borrowed from https://stackoverflow.com/questions/5597060/detecting-arrow-key-presses-in-javascript.
     document.onkeyup = checkKey;
-    // var btn = document.getElementById( "utiltity" );
-    // btn.onclick = function() {
-    //     var pLength = 0;
-    //     for( var i = 0; i < numRows; i++ ) {
-    //         sleep(pLength).then(() => { 
-    //             doMove( 1 ); 
-    //         });
-    //         pLength += 100;
-    //         sleep(pLength).then(() => { doMove( 2 ) });
-    //         pLength += 100;
+
+    // document.getElementById( "utilitity" ).onclick = function() {
+    //     for( var i = 0; i < 9; i++ ) {
+    //         transDown();
+    //         transRight()
     //     }
-    
-    //     sleep(pLength).then(() => { doLose() });
-    // };
+    //         doWin();
+    // }
 };
 
 window.addEventListener( "resize", function() {
